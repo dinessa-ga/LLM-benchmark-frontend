@@ -1,50 +1,62 @@
-const { CardFactory, ArticleCard } = require('../code-project/case-1/claude-3.5/example1.1.js');
+//Solo se usan cuando es modele.exports
+//const { CardFactory, ArticleCard, ProductCard, ProfileCard, Card } = require('../src/case-1/claude-3.5/example1.1.js');
+//const { CardFactory, ArticleCard, ProductCard, ProfileCard, Card} = require('../src/case-1/claude-3.5/example1.2.js');
+//const { CardFactory, ArticleCard, ProductCard, ProfileCard, Card } = require('../code-project/case-1/claude-3.5/example1.3.js');
+
+//const { CardFactory, ArticleCard, ProductCard, ProfileCard, Card} = require('../src/case-1/deepseek.r1/example1.1.js');
+//const { CardFactory, ArticleCard, ProductCard, ProfileCard, Card} = require('../src/case-1/deepseek.r1/example1.2.js');
+//const { CardFactory, ArticleCard, ProductCard, ProfileCard, Card} = require('../code-project/case-1/deepseek.r1/example1.3.js');
+
+const { CardFactory, ArticleCard, ProductCard, ProfileCard, Card} = require('../src/case-1/gemini-2.0/example1.1.js'); 
+//const { CardFactory, ArticleCard, ProductCard, ProfileCard, Card} = require('../src/case-1/gemini-2.0/example1.2.js'); 
+//const { CardFactory, ArticleCard, ProductCard, ProfileCard, Card} = require('../src/case-1/gemini-2.0/example1.3.js');
+
+//const { createCard, Card, ArticleCard, ProductCard, ProfileCard } = require('../src/case-1/gpt-4o1-preview/example1.1.js');
+//const { createCard, ArticleCard, ProductCard, ProfileCard, Card} = require('../src/case-1/gpt-4o1-preview/example1.2.js');
+// const { CardFactory, ArticleCard, ProductCard, ProfileCard, Card} = require('../src/case-1/gpt-4o1-preview/example1.3.js');
 
 
-test('Debe usar la fábrica para crear una instancia (No separa la lógica de creación de objetos)', () => {
-  const factory = new CardFactory();
+//import { createCard, Card, ArticleCard, ProductCard, ProfileCard } from '../src/case-1/gpt-4o1-preview/example1.1.js';
 
-  // Creación correcta a través de la fábrica
-  const card = factory.createCard('article', { title: 'Test', date: '2025-03-14', summary: 'Resumen de prueba' });
-  expect(card).toBeInstanceOf(ArticleCard);
+describe('Factory Method (createCard)', () => {
+  // 1. Desacoplamiento entre creación y uso
+  it('Debe crear instancias de Card a través de la función de fábrica, desacoplando la creación del uso', () => {
+    const articleData = { title: 'Test Article', content: 'This is an article.' };
+    const productData = { name: 'Test Product', price: 19.99 };
+    const profileData = { username: 'testuser1', bio: 'A test profile1.' };
 
-  // Creación incorrecta mediante "new"
-  expect(() => new ArticleCard({ title: 'Error Test' })).toThrow(
-    'No separa la lógica de creación de objetos: El cliente usa "new" directamente'
-  );
-});
+    const article = createCard('article', articleData);
+    const product = createCard('product', productData);
+    const profile = createCard('profile', profileData);
 
-// Manejo de errores en la creación de objetos
+    expect(article).toBeInstanceOf(Card);
+    expect(product).toBeInstanceOf(Card);
+    expect(profile).toBeInstanceOf(Card);
 
-test("Lanza un error para input no válido", () => {
-  class Factory {
-    createProduct(type) {
-      if (type !== "A" && type !== "B") {
-        throw new Error("Tipo no válido");
-      }
-      return { type };
-    }
-  }
-  const factory = new Factory();
+    
+  });
 
-  expect(() => factory.createProduct("C")).toThrow("Tipo no válido");
-});
+  // 2. Tipo correcto de producto devuelto
+  it('Debe retornar el tipo correcto de producto según el input especificado', () => {
+    const articleData = { title: 'Test Article', content: 'This is an article.' };
+    const productData = { name: 'Test Product', price: 19.99 };
+    const profileData = { username: 'testuser2', bio: 'A test profile2.' };
 
+    expect(createCard('article', articleData)).toBeInstanceOf(ArticleCard);
+    expect(createCard('product', productData)).toBeInstanceOf(ProductCard);
+    expect(createCard('profile', profileData)).toBeInstanceOf(ProfileCard);
+  });
 
-//Tipo correcto de producto devuelto según el input recibido
-test("Retorna el tipo correcto según el input", () => {
-  class ProductA {}
-  class ProductB {}
-  class Factory {
-    createProduct(type) {
-      if (type === "A") return new ProductA();
-      if (type === "B") return new ProductB();
-    }
-  }
-  const factory = new Factory();
-  const productA = factory.createProduct("A");
-  const productB = factory.createProduct("B");
+  // 3. Cumplimiento de DIP (Principio de Inversión de Dependencias) / Retorno de Abstracciones
+  it('La función de fábrica debe retornar abstracciones (instancias de la clase base Card)', () => {
+    const articleData = { title: 'Test Article', content: 'This is an article.' };
+    const productData = { name: 'Test Product', price: 19.99 };
+    const profileData = { username: 'testuser3', bio: 'A test profile3.' };
 
-  expect(productA).toBeInstanceOf(ProductA);
-  expect(productB).toBeInstanceOf(ProductB);
+    expect(createCard('article', articleData)).toBeInstanceOf(Card);
+    expect(createCard('product', productData)).toBeInstanceOf(Card);
+    expect(createCard('profile', profileData)).toBeInstanceOf(Card);
+  });
+
+ 
 });

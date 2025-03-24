@@ -104,6 +104,3 @@ const profileCard = factory.createCard('profile', {
     { url: 'https://linkedin.com/in/maria', icon: 'fab fa-linkedin' }
   ]
 });
-
-// Agregar tarjetas al DOM
-document.getElementById('card-container').append(articleCard, productCard, profileCard);

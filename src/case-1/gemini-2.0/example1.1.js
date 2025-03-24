@@ -125,35 +125,3 @@ const profileData = {
 const articleCard = CardComponentFactory.createCard('article', articleData);
 const productCard = CardComponentFactory.createCard('product', productData);
 const profileCard = CardComponentFactory.createCard('profile', profileData);
-
-// Renderizar los componentes en el DOM
-const container = document.getElementById('card-container');
-container.innerHTML = `
-  ${articleCard.render()}
-  ${productCard.render()}
-  ${profileCard.render()}
-`;
-
-// ------------------- Estilos CSS (opcional) -------------------
-
-/*
-  Añade este CSS para que las tarjetas se vean mejor.  Puedes incluirlo en una etiqueta <style> dentro de tu HTML o en un archivo CSS separado.
-*/
-const styles = `
-  .article-card, .product-card, .profile-card {
-    border: 1px solid #ccc;
-    padding: 10px;
-    margin-bottom: 10px;
-  }
-
-  .product-card img, .profile-card img {
-    width: 100px;
-    height: 100px;
-    object-fit: cover;
-  }
-`;
-
-// Agrega los estilos al head del documento (opcional)
-const styleElement = document.createElement('style');
-styleElement.textContent = styles;
-document.head.appendChild(styleElement);
