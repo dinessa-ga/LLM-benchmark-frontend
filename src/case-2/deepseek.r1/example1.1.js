@@ -1,104 +1,89 @@
 //1
 
-class ArticleCard {
+// Clase base para todas las tarjetas de artículos
+class articleCard {
   constructor(data) {
-    this.title = data.title;
-    this.content = data.content;
+    this.type = 'Generic Article';
+    this.data = data;
   }
 
-  render() {
-    throw new Error('Método render debe ser implementado');
+  // Método común que pueden sobrescribir las subclases
+  display() {
+    console.log(`Mostrando artículo genérico: ${this.data.title}`);
   }
 }
 
-class NewsArticleCard extends ArticleCard {
-  constructor(data) {
-    super(data);
-    this.date = data.date;
-    this.category = data.category;
-  }
-
-  render() {
-    return `
-      <div class="card news">
-        <h2>${this.title}</h2>
-        <p>${this.content}</p>
-        <div class="meta">
-          <time>${this.date}</time>
-          <span class="category">${this.category}</span>
-        </div>
-      </div>
-    `;
-  }
-}
-
-class OpinionArticleCard extends ArticleCard {
+// Subclases especializadas
+class newsArticle extends articleCard {
   constructor(data) {
     super(data);
-    this.author = data.author;
+    this.type = 'News Article';
   }
 
-  render() {
-    return `
-      <div class="card opinion">
-        <h2>${this.title}</h2>
-        <p>${this.content}</p>
-        <div class="author">✍️ ${this.author}</div>
-      </div>
-    `;
+  display() {
+    console.log(`[NOTICIA] ${this.data.headline} - ${this.data.location}`);
   }
 }
 
-class ArticleCardFactory {
-  static types = {};
-
-  static registerType(type, CardClass) {
-    this.types[type] = CardClass;
-  }
-
-  static create(type, data) {
-    const Card = this.types[type];
-    if (!Card) throw new Error(`Tipo no soportado: ${type}`);
-    return new Card(data);
-  }
-}
-
-// Registro de tipos básicos
-ArticleCardFactory.registerType('news', NewsArticleCard);
-ArticleCardFactory.registerType('opinion', OpinionArticleCard);
-
-// Uso
-const newsCard = ArticleCardFactory.create('news', {
-  title: 'Nuevo descubrimiento científico',
-  content: 'Investigadores encuentran...',
-  date: '2024-03-20',
-  category: 'Ciencia'
-});
-
-const opinionCard = ArticleCardFactory.create('opinion', {
-  title: 'El futuro de la IA',
-  content: 'Debemos regular...',
-  author: 'Dra. Pérez'
-});
-
-// Para añadir nuevo tipo (sin modificar fábrica)
-class ReportageArticleCard extends ArticleCard {
+class opinionArticle extends articleCard {
   constructor(data) {
     super(data);
-    this.location = data.location;
-    this.photos = data.photos;
+    this.type = 'Opinion Article';
   }
 
-  render() {
-    return `
-      <div class="card reportage">
-        <h2>${this.title}</h2>
-        <p>${this.content}</p>
-        <div class="gallery">${this.photos.map(p => `<img src="${p}">`).join('')}</div>
-        <div class="location">📍 ${this.location}</div>
-      </div>
-    `;
+  display() {
+    console.log(`[OPINIÓN] ${this.data.author}: "${this.data.content}"`);
   }
 }
 
-ArticleCardFactory.registerType('reportage', ReportageArticleCard);
+class reportArticle extends articleCard {
+  constructor(data) {
+    super(data);
+    this.type = 'Report Article';
+  }
+
+  display() {
+    console.log(`[REPORTE] ${this.data.title} (${data.pages} páginas)`);
+  }
+}
+
+// Factory Method
+const articleFactory = {
+  createArticle: function(type, data) {
+    switch(type.toLowerCase()) {
+      case 'news':
+        return new newsArticle(data);
+      case 'opinion':
+        return new opinionArticle(data);
+      case 'report':
+        return new reportArticle(data);
+      default:
+        throw new Error(`Tipo de artículo no válido: ${type}`);
+    }
+  }
+};
+
+// Ejemplo de uso
+try {
+  const news = articleFactory.createArticle('news', {
+    headline: 'Nuevo descubrimiento científico',
+    location: 'Madrid'
+  });
+  
+  const opinion = articleFactory.createArticle('opinion', {
+    author: 'Juan Pérez',
+    content: 'La importancia de la programación en la educación actual'
+  });
+  
+  const report = articleFactory.createArticle('report', {
+    title: 'Informe anual 2023',
+    pages: 45
+  });
+  
+  news.display();    // [NOTICIA] Nuevo descubrimiento científico - Madrid
+  opinion.display(); // [OPINIÓN] Juan Pérez: "La importancia de la programación..."
+  report.display();  // [REPORTE] Informe anual 2023 (45 páginas)
+  
+} catch (error) {
+  console.error(error.message);
+}
