@@ -1,143 +1,119 @@
 // 2
 
-// Clase base abstracta para tarjetas
-class ArticleCard {
+// Clase base para todos los artículos
+class articleCard {
   constructor(data) {
-    if (new.target === ArticleCard) {
-      throw new Error("No se puede instanciar la clase abstracta ArticleCard");
+    if (new.target === articleCard) {
+      throw new Error("No se puede instanciar la clase abstracta articleCard");
     }
-    this.title = data.title;
-    this.content = data.content;
+    this.data = data;
+    this.type = 'Artículo genérico';
   }
 
   render() {
-    throw new Error("Método 'render' debe ser implementado");
+    throw new Error("Método abstracto render() debe ser implementado");
   }
 }
 
-// Implementaciones concretas
-class NewsCard extends ArticleCard {
+// Tipos concretos de artículos
+class newsArticle extends articleCard {
   constructor(data) {
     super(data);
-    this.date = data.date;
-    this.category = data.category;
+    this.type = 'Artículo de Noticias';
   }
 
   render() {
     return `
-      <article class="card news">
-        <h2>${this.title}</h2>
-        <div class="content">${this.content}</div>
+      <div class="news-card">
+        <h2>${this.data.headline}</h2>
+        <p class="location">${this.data.location}</p>
+        <p>${this.data.content}</p>
+      </div>
+    `;
+  }
+}
+
+class opinionArticle extends articleCard {
+  constructor(data) {
+    super(data);
+    this.type = 'Artículo de Opinión';
+  }
+
+  render() {
+    return `
+      <div class="opinion-card">
+        <h3>Opinión de ${this.data.author}</h3>
+        <blockquote>${this.data.opinion}</blockquote>
+        <p>Valoración: ${this.data.rating}/5</p>
+      </div>
+    `;
+  }
+}
+
+class reportArticle extends articleCard {
+  constructor(data) {
+    super(data);
+    this.type = 'Artículo de Reportaje';
+  }
+
+  render() {
+    return `
+      <div class="report-card">
+        <h2>${this.data.title}</h2>
         <div class="meta">
-          <span class="date">📅 ${this.date}</span>
-          <span class="category">🏷️ ${this.category}</span>
+          <span>Páginas: ${this.data.pages}</span>
+          <span>Autor: ${this.data.author}</span>
         </div>
-      </article>
+        <article>${this.data.reportContent}</article>
+      </div>
     `;
   }
 }
 
-class OpinionCard extends ArticleCard {
-  constructor(data) {
-    super(data);
-    this.author = data.author;
-  }
+// Factory Method
+const articleFactory = {
+  createArticle: (type, data) => {
+    const articleTypes = {
+      news: newsArticle,
+      opinion: opinionArticle,
+      report: reportArticle
+    };
 
-  render() {
-    return `
-      <article class="card opinion">
-        <h2>${this.title}</h2>
-        <div class="content">${this.content}</div>
-        <div class="author">✍️ ${this.author}</div>
-      </article>
-    `;
-  }
-}
-
-class ReportageCard extends ArticleCard {
-  constructor(data) {
-    super(data);
-    this.location = data.location;
-    this.photos = data.photos;
-  }
-
-  render() {
-    return `
-      <article class="card reportage">
-        <h2>${this.title}</h2>
-        <div class="content">${this.content}</div>
-        <div class="gallery">
-          ${this.photos.map(photo => `<img src="${photo}" alt="Reportage photo">`).join('')}
-        </div>
-        <div class="location">📍 ${this.location}</div>
-      </article>
-    `;
-  }
-}
-
-// Factory Method con registro dinámico
-class ArticleCardFactory {
-  static cardTypes = {};
-
-  static registerType(type, CardClass) {
-    if (!(CardClass.prototype instanceof ArticleCard)) {
-      throw new Error("El tipo de tarjeta debe heredar de ArticleCard");
+    const ArticleClass = articleTypes[type.toLowerCase()];
+    
+    if (!ArticleClass) {
+      throw new Error(`Tipo de artículo no soportado: ${type}`);
     }
-    this.cardTypes[type] = CardClass;
+    
+    return new ArticleClass(data);
   }
-
-  static create(type, data) {
-    const CardClass = this.cardTypes[type];
-    if (!CardClass) {
-      throw new Error(`Tipo de tarjeta no válido: ${type}`);
-    }
-    return new CardClass(data);
-  }
-}
-
-// Registramos los tipos iniciales
-ArticleCardFactory.registerType('news', NewsCard);
-ArticleCardFactory.registerType('opinion', OpinionCard);
-ArticleCardFactory.registerType('reportage', ReportageCard);
+};
 
 // Ejemplo de uso
-const newsData = {
-  title: 'Avances en inteligencia artificial',
-  content: 'Nuevos desarrollos revolucionan el campo de la IA...',
-  date: '2024-03-20',
-  category: 'Tecnología'
-};
+try {
+  const noticia = articleFactory.createArticle('news', {
+    headline: 'Nuevas medidas económicas',
+    location: 'Barcelona',
+    content: 'El gobierno anunció hoy nuevas medidas...'
+  });
 
-const opinionData = {
-  title: 'Reflexiones sobre la educación moderna',
-  content: 'La educación necesita una reforma urgente...',
-  author: 'Carlos Martínez'
-};
+  const opinion = articleFactory.createArticle('opinion', {
+    author: 'María Gómez',
+    opinion: 'Las nuevas políticas ambientales son insuficientes...',
+    rating: 3
+  });
 
-const newsCard = ArticleCardFactory.create('news', newsData);
-const opinionCard = ArticleCardFactory.create('opinion', opinionData);
+  const reportaje = articleFactory.createArticle('report', {
+    title: 'Cambio climático en 2024',
+    pages: 12,
+    author: 'Equipo de investigación',
+    reportContent: 'Un estudio reciente revela...'
+  });
 
-// Para agregar nuevo tipo (sin modificar la fábrica)
-class InterviewCard extends ArticleCard {
-  constructor(data) {
-    super(data);
-    this.interviewee = data.interviewee;
-    this.duration = data.duration;
-  }
+  console.log(noticia.render());
+  console.log(opinion.render());
+  console.log(reportaje.render());
 
-  render() {
-    return `
-      <article class="card interview">
-        <h2>${this.title}</h2>
-        <div class="content">${this.content}</div>
-        <div class="details">
-          <span>🎤 Entrevistado: ${this.interviewee}</span>
-          <span>⏱️ Duración: ${this.duration} minutos</span>
-        </div>
-      </article>
-    `;
-  }
+} catch (error) {
+  console.error('Error:', error.message);
 }
-
-// Registramos el nuevo tipo
-ArticleCardFactory.registerType('interview', InterviewCard);

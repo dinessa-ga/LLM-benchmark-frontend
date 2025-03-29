@@ -1,152 +1,195 @@
 //3
 
-// Clase base abstracta para todas las tarjetas
+// Clase abstracta base
 class ArticleCard {
   constructor(data) {
     if (new.target === ArticleCard) {
-      throw new Error("No se puede instanciar la clase abstracta ArticleCard");
+      throw new Error('ArticleCard es una clase abstracta y no puede ser instanciada directamente');
     }
-    this.title = data.title;
-    this.content = data.content;
+    this.data = data;
+    this.createdAt = new Date();
   }
 
   render() {
-    throw new Error("El método render debe ser implementado por las subclases");
+    throw new Error('Método render() debe ser implementado por las subclases');
+  }
+
+  getMetadata() {
+    return {
+      type: this.constructor.name,
+      createdAt: this.createdAt,
+      wordCount: this.data.content?.length || 0
+    };
   }
 }
 
-// Implementaciones concretas de tarjetas
-class NewsCard extends ArticleCard {
+// Clases concretas
+class NewsArticle extends ArticleCard {
   constructor(data) {
     super(data);
-    this.date = data.date;
-    this.category = data.category;
+    this.validateData(['headline', 'location', 'content']);
+  }
+
+  validateData(requiredFields) {
+    requiredFields.forEach(field => {
+      if (!this.data[field]) {
+        throw new Error(`Campo requerido faltante para noticia: ${field}`);
+      }
+    });
   }
 
   render() {
     return `
-      <div class="card news">
-        <h2>${this.title}</h2>
-        <p>${this.content}</p>
+      <article class="news">
+        <h1>${this.data.headline}</h1>
         <div class="meta">
-          <span class="date">📅 ${this.date}</span>
-          <span class="category">🏷️ ${this.category}</span>
+          <span class="location">${this.data.location}</span>
+          <time>${this.createdAt.toLocaleDateString()}</time>
         </div>
-      </div>
+        <p>${this.data.content}</p>
+      </article>
     `;
   }
 }
 
-class OpinionCard extends ArticleCard {
+class OpinionArticle extends ArticleCard {
   constructor(data) {
     super(data);
-    this.author = data.author;
+    this.validateData(['author', 'content', 'rating']);
+  }
+
+  validateData(requiredFields) {
+    requiredFields.forEach(field => {
+      if (!this.data[field] && field !== 'rating') {
+        throw new Error(`Campo requerido faltante para opinión: ${field}`);
+      }
+    });
+    
+    if (this.data.rating && (this.data.rating < 1 || this.data.rating > 5)) {
+      throw new Error('El rating debe ser entre 1 y 5');
+    }
   }
 
   render() {
     return `
-      <div class="card opinion">
-        <h2>${this.title}</h2>
-        <p>${this.content}</p>
-        <div class="author highlight">✍️ ${this.author}</div>
-      </div>
+      <article class="opinion">
+        <h2>Opinión de ${this.data.author}</h2>
+        <div class="content">${this.data.content}</div>
+        ${this.data.rating ? `<div class="rating">${'★'.repeat(this.data.rating)}</div>` : ''}
+      </article>
     `;
   }
 }
 
-class ReportageCard extends ArticleCard {
+class ReportArticle extends ArticleCard {
   constructor(data) {
     super(data);
-    this.location = data.location;
-    this.duration = data.duration;
+    this.validateData(['title', 'author', 'pages', 'content']);
+  }
+
+  validateData(requiredFields) {
+    requiredFields.forEach(field => {
+      if (!this.data[field]) {
+        throw new Error(`Campo requerido faltante para reportaje: ${field}`);
+      }
+    });
+    
+    if (this.data.pages && typeof this.data.pages !== 'number') {
+      throw new Error('El número de páginas debe ser un valor numérico');
+    }
   }
 
   render() {
     return `
-      <div class="card reportage">
-        <h2>${this.title}</h2>
-        <p>${this.content}</p>
-        <div class="details">
-          <span class="location">📍 ${this.location}</span>
-          <span class="duration">⏱ ${this.duration} minutos</span>
-        </div>
-      </div>
+      <article class="report">
+        <header>
+          <h1>${this.data.title}</h1>
+          <div class="details">
+            <span>Autor: ${this.data.author}</span>
+            <span>Páginas: ${this.data.pages}</span>
+          </div>
+        </header>
+        <section class="report-content">${this.data.content}</section>
+      </article>
     `;
   }
 }
 
-// Fábrica de tarjetas con registro dinámico
-class ArticleCardFactory {
-  static registry = new Map();
+// Factory Method con registro dinámico
+const articleFactory = {
+  types: {
+    news: NewsArticle,
+    opinion: OpinionArticle,
+    report: ReportArticle
+  },
 
-  static registerType(type, CardClass) {
-    if (!CardClass.prototype instanceof ArticleCard) {
-      throw new Error("Las tarjetas deben heredar de ArticleCard");
+  createArticle(type, data) {
+    const NormalizedType = type.toLowerCase();
+    const ArticleClass = this.types[NormalizedType];
+    
+    if (!ArticleClass) {
+      const validTypes = Object.keys(this.types).join(', ');
+      throw new Error(`Tipo de artículo no válido: ${type}. Tipos válidos: ${validTypes}`);
     }
-    this.registry.set(type, CardClass);
-  }
-
-  static create(type, data) {
-    const CardClass = this.registry.get(type);
-    if (!CardClass) {
-      throw new Error(`Tipo de tarjeta no soportado: ${type}`);
+    
+    try {
+      return new ArticleClass(data);
+    } catch (error) {
+      throw new Error(`Error creando artículo: ${error.message}`);
     }
-    return new CardClass(data);
-  }
-}
+  },
 
-// Registramos los tipos iniciales
-ArticleCardFactory.registerType('news', NewsCard);
-ArticleCardFactory.registerType('opinion', OpinionCard);
-ArticleCardFactory.registerType('reportage', ReportageCard);
+  registerArticleType(type, className) {
+    if (this.types[type]) {
+      throw new Error(`El tipo ${type} ya está registrado`);
+    }
+    if (!(className.prototype instanceof ArticleCard)) {
+      throw new Error('El tipo debe heredar de ArticleCard');
+    }
+    this.types[type] = className;
+  }
+};
 
 // Ejemplo de uso
-const newsArticle = ArticleCardFactory.create('news', {
-  title: 'Nuevo avance en medicina',
-  content: 'Descubrimiento revolucionario en el tratamiento del cáncer...',
-  date: '2024-03-21',
-  category: 'Ciencia'
-});
+try {
+  // Crear artículos
+  const news = articleFactory.createArticle('news', {
+    headline: 'Avances en inteligencia artificial',
+    location: 'Silicon Valley',
+    content: 'Nuevos desarrollos revolucionan el campo de la IA...'
+  });
 
-const opinionArticle = ArticleCardFactory.create('opinion', {
-  title: 'La importancia de la educación',
-  content: 'Necesitamos reformar el sistema educativo actual...',
-  author: 'María González'
-});
+  const opinion = articleFactory.createArticle('opinion', {
+    author: 'Dr. Smith',
+    content: 'La ética en la IA debe ser prioridad...',
+    rating: 4
+  });
 
-// Agregar nuevo tipo sin modificar la fábrica
-class VideoCard extends ArticleCard {
-  constructor(data) {
-    super(data);
-    this.videoUrl = data.videoUrl;
-    this.views = data.views;
-  }
+  const report = articleFactory.createArticle('report', {
+    title: 'Informe de Tecnología 2024',
+    author: 'Tech Insights',
+    pages: 45,
+    content: 'Análisis detallado de las tendencias tecnológicas...'
+  });
 
-  render() {
-    return `
-      <div class="card video">
-        <h2>${this.title}</h2>
-        <iframe src="${this.videoUrl}"></iframe>
-        <p>${this.content}</p>
-        <div class="views">👁️ ${this.views} visualizaciones</div>
-      </div>
-    `;
-  }
+  // Renderizar artículos
+  console.log(news.render());
+  console.log(opinion.getMetadata());
+  console.log(report.render());
+
+  // Registrar nuevo tipo
+  articleFactory.registerArticleType('analysis', class AnalysisArticle extends ArticleCard {
+    constructor(data) {
+      super(data);
+      // implementación específica...
+    }
+    render() {
+      // implementación específica...
+    }
+  });
+
+} catch (error) {
+  console.error('Error:', error.message); 
 }
 
-ArticleCardFactory.registerType('video', VideoCard);
-
-// Uso del nuevo tipo
-const videoArticle = ArticleCardFactory.create('video', {
-  title: 'Documental sobre el espacio',
-  content: 'Explorando los misterios del universo...',
-  videoUrl: 'https://example.com/video.mp4',
-  views: 1500
-});
-
-// Renderizar las tarjetas
-document.body.innerHTML = `
-  ${newsArticle.render()}
-  ${opinionArticle.render()}
-  ${videoArticle.render()}
-`;
+module.exports = { articleFactory, ArticleCard, NewsArticle };

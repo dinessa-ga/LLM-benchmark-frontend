@@ -35,9 +35,6 @@ Tests relacionados con un archivo específico
 Modo watch (vigila cambios y ejecuta tests automáticamente) 
 - npm run test:watch
 
-npx jest tests/case2.test.js
+Para ejecutar cada archivo de test - los archivos de test apuntan a la ruta de los archivos analizados
+- npx jest tests/case2.test.js
 
- <!-- The  testEnvironment  property is set to  jsdom  to tell Jest to use the JSDOM environment for running tests. 
- Step 3: Create a test file 
- Create a new file named  sum.test.js  in the  src  directory. This file will contain the test cases for the  sum  function.
-Add the following code to the  sum.test.js  file:  -->
