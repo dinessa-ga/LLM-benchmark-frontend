@@ -1,80 +1,89 @@
 //1
 
-class ArticleCard {
+// article-module.js
+export class ArticleCard {
   constructor(data) {
-    this.title = data.title || "Untitled";
+    this.data = data;
   }
 
   render() {
-    throw new Error("Render method must be implemented by subclass");
+    throw new Error("Método render debe ser implementado");
   }
 }
 
-class NewsArticle extends ArticleCard {
-  constructor(data) {
-    super(data);
-    this.date = data.date || "Unknown date";
-    this.location = data.location || "Unknown location";
-  }
-
+export class NewsArticle extends ArticleCard {
   render() {
     return `
-      <div class="news-article">
-        <h2>${this.title}</h2>
-        <p class="date">📅 ${this.date}</p>
-        <p class="location">📍 ${this.location}</p>
-      </div>
+      <article class="news-card">
+        <header>
+          <h2>${this.data.title}</h2>
+          <div class="meta">
+            <span class="source">${this.data.source}</span>
+            <time>${new Date(this.data.publishDate).toLocaleDateString()}</time>
+          </div>
+        </header>
+        <section class="content">
+          <p>${this.data.summary}</p>
+        </section>
+      </article>
     `;
   }
 }
 
-class OpinionArticle extends ArticleCard {
-  constructor(data) {
-    super(data);
-    this.author = data.author || "Anonymous";
-    this.viewCount = data.viewCount || 0;
-  }
-
+export class OpinionArticle extends ArticleCard {
   render() {
     return `
-      <div class="opinion-article">
-        <h2>${this.title}</h2>
-        <p class="author">✍️ ${this.author}</p>
-        <p class="views">👀 ${this.viewCount} views</p>
-      </div>
+      <article class="opinion-card">
+        <h3>${this.data.title}</h3>
+        <div class="author-info">
+          <img src="${this.data.authorImage}" alt="${this.data.author}">
+          <span>${this.data.author}</span>
+        </div>
+        <div class="opinion-content">
+          ${this.data.content}
+        </div>
+        <div class="ratings">
+          Valoración: ${'★'.repeat(this.data.rating)}${'☆'.repeat(5 - this.data.rating)}
+        </div>
+      </article>
     `;
   }
 }
 
-class ReportArticle extends ArticleCard {
-  constructor(data) {
-    super(data);
-    this.summary = data.summary || "No summary available";
-    this.pageCount = data.pageCount || 0;
-  }
-
+export class ReportArticle extends ArticleCard {
   render() {
     return `
-      <div class="report-article">
-        <h2>${this.title}</h2>
-        <p class="summary">📑 ${this.summary}</p>
-        <p class="pages">📄 ${this.pageCount} pages</p>
-      </div>
+      <article class="report-card">
+        <h2>${this.data.title}</h2>
+        <div class="report-meta">
+          <span>Duración: ${this.data.duration} minutos</span>
+          <span>Equipo: ${this.data.team.join(', ')}</span>
+        </div>
+        <div class="key-findings">
+          <h4>Hallazgos principales:</h4>
+          <ul>
+            ${this.data.findings.map(f => `<li>${f}</li>`).join('')}
+          </ul>
+        </div>
+        <a href="${this.data.fullReportUrl}" class="cta">Ver informe completo</a>
+      </article>
     `;
   }
 }
 
-export default class ArticleFactory  {
-  createArticle(type, data) {
-    switch (type) {
-      case "news":
+export class ArticleFactory {
+  static createArticle(type, data) {
+    const normalizedType = type.toLowerCase().replace(/\s+/g, '');
+    
+    switch(normalizedType) {
+      case 'news':
         return new NewsArticle(data);
-      case "opinion":
+      case 'opinion':
         return new OpinionArticle(data);
-      case "report":
+      case 'report':
         return new ReportArticle(data);
       default:
-        throw new Error(`Invalid article type: ${type}`);
+        throw new Error(`Tipo de artículo no reconocido: ${type}`);
     }
   }
-};
+}

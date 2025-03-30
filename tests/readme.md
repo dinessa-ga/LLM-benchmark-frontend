@@ -58,18 +58,30 @@ Este funcionó sin errores:
 
 Por convención en Jest, los archivos de test tienen el mismo nombre que el archivo que se está probando, con la extensión .test.js o .spec.js. Sin embargo, aquí se hace uso de test/patron/case2.test.js el cual permitará comprender a qué caso pertenece dentro de la evaluación de cada patrón de diseño. 
 
+Todos los nombres siguen la convención de clases en PascalCase y métodos en camelCase, esto con el objetivo de estandarizar el código generado.
+Además, el código generado garantiza la compatibilidad con Jest mediante import/export para evitar problemas de compatabilidad.
+
+Por fines de testing se exportan todas las clases y clases que heredan sin necesidad de usar export default, para que cada uno pueda ser testeado sin que arrojen errores de 'undefined' cuando no se importen desde los archivos de tests cada uno de forma individual.
+
 Cases
 
-Enfocado en estructura
+Las formas para crear prompts se pueden enfocar en:
+
+### Enfocado en estructura
 
 Crea un ejemplo de código JavaScript para frontend que implemente el patrón Factory Method para la creación de objetos. Define una interfaz común para los objetos creados y diferentes clases concretas que implementen esa interfaz. Utiliza una función fábrica para instanciar estos objetos basándose en un tipo. Cada objeto debe tener un método `render(containerId)` que encuentre el elemento con el ID `containerId` en el DOM y muestre información del objeto dentro de él. Utiliza la sintaxis de módulos ES, asegurándote de importar y exportar los módulos.
 
-Propiedades de los objetos
+### Propiedades de los objetos
 
 Genera un ejemplo de código JavaScript para frontend utilizando el patrón Factory Method para crear diferentes tipos de **productos** (por ejemplo, producto con imagen, producto con texto). Cada producto debe tener propiedades como `nombre` y un método `render(elementoPadre)` para mostrar el producto en el DOM. Implementa la fábrica y los productos utilizando la sintaxis de módulos ES, con las correspondientes importaciones y exportaciones.
 
 
-Todos los nombres siguen la convención de clases en PascalCase y métodos en camelCase, esto con el objetivo de estandarizar el código generado.
-Además, el código generado garantiza la compatibilidad con Jest mediante import/export para evitar problemas de compatabilidad.
+Crea un factory method ArticleFactory.createArticle(type, data), que devuelva NewsArticle, OpinionArticle o ReportArticle, todas heredando de ArticleCard. Implementa render(). Define todas las clases y la fábrica en un solo archivo y exporta solo ArticleFactory. Utiliza la sintaxis de módulos ES (import/export). - No sirvió porque es necesario exportar cada una de las clases y clases que heredan.
 
-Crea un factory method ArticleFactory.createArticle(type, data), que devuelva NewsArticle, OpinionArticle o ReportArticle, todas heredando de ArticleCard. Implementa render(). Define todas las clases y la fábrica en un solo archivo y exporta solo ArticleFactory. Utiliza la sintaxis de módulos ES (import/export)
+El siguiente prompt si permitió testear
+Para que se puedan testear se requiere usar la siguiente forma de import
+````
+import { ArticleFactory, NewsArticle, OpinionArticle, ReportArticle} from '../../src/case-2/deepseek.r1/example1.1.js';
+
+````
+Crea un factory method ArticleFactory.createArticle(type, data), que devuelva NewsArticle, OpinionArticle o ReportArticle, todas heredando de ArticleCard. Implementa render(). Todas Define todas las clases y la fábrica en un solo archivo y expórtalas. Utiliza la sintaxis de módulos ES (export).

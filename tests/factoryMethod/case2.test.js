@@ -1,5 +1,6 @@
-import { ArticleFactory } from '../../src/case-2/deepseek.r1/example1.1.js';
-import { NewsArticle, OpinionArticle, ReportArticle} from '../../src/case-2/deepseek.r1/example1.1.js';
+//para export default sin llaves
+//import  ArticleFactory from '../../src/case-2/deepseek.r1/example1.1.js';
+import { ArticleFactory, NewsArticle, OpinionArticle, ReportArticle} from '../../src/case-2/deepseek.r1/example1.1.js';
 
 // __tests__/ArticleFactory.test.js
 
