@@ -7,13 +7,14 @@
     "test": "test"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest --verbose"
   },
   "keywords": [
     "benchmark"
   ],
   "author": "Diana Guaiña",
   "license": "ISC",
+  "type": "module",
   "devDependencies": {
     "jest": "^29.7.0"
   }

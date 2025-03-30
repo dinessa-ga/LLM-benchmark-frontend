@@ -35,16 +35,21 @@ Configura tu archivo `package.json` para incluir un script de pruebas:
 ```
 
 ```
+## Ejecución
 
 Ejecuta `npm test` para correr tus pruebas y ver los resultados en la terminal.
 
 versión LTS (Long-Term Support) de Node.js.
 nvm install 22.14.0
 
-npm v10.0.2
+### Ejución de test
+Para ejecutar cada archivo de test - los archivos de test apuntan a la ruta de los archivos analizados
 
-nvm use 22.14.0
+npx jest tests/factoryMethod/case2.test.js
 
+## Explicaciones técnicas sobre tests
+
+Por convención en Jest, los archivos de test tienen el mismo nombre que el archivo que se está probando, con la extensión .test.js o .spec.js. Sin embargo, aquí se hace uso de test/patron/case2.test.js el cual permitará comprender a qué caso pertenece dentro de la evaluación de cada patrón de diseño. 
 
 Cases
 
@@ -55,3 +60,7 @@ Crea un ejemplo de código JavaScript para frontend que implemente el patrón Fa
 Propiedades de los objetos
 
 Genera un ejemplo de código JavaScript para frontend utilizando el patrón Factory Method para crear diferentes tipos de **productos** (por ejemplo, producto con imagen, producto con texto). Cada producto debe tener propiedades como `nombre` y un método `render(elementoPadre)` para mostrar el producto en el DOM. Implementa la fábrica y los productos utilizando la sintaxis de módulos ES, con las correspondientes importaciones y exportaciones.
+
+
+Todos los nombres siguen la convención de clases en PascalCase y métodos en camelCase, esto con el objetivo de estandarizar el código generado.
+Además, el código generado garantiza la compatibilidad con Jest mediante import/export para evitar problemas de compatabilidad.
