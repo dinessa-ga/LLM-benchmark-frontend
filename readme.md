@@ -8,13 +8,19 @@ En las pruebas unitarias el propósito fundamental de escribir un test es verifi
 
 
 ## Estructura
+
+
+
+### Estructura del proyecto
+
 1. **Evaluación de código de javascript**  
   - Es necesario tener algún editor de código para Vanilla Javascript
-  - 
+  
 
 2. **Evaluación**
   - Conjunto de pruebas  
   - Métricas ()
+  
 
 3. **Resultados**
   - Tablas comparativas  

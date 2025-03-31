@@ -1,21 +1,23 @@
 # Test con Jest
 
-Este archivo describe el proceso básico para ejecutar y organizar pruebas con Jest.
+Este archivo describe el proceso básico para ejecutar y organizar pruebas unitarias con Jest.
 
+Este proyecto usa la versión LTS (Long-Term Support) de Node.js 22.14.0
+
+Ejecuta el siguiente comando si usas nvm `
+nvm install 22.14.0`
+
+Revisa la documentación oficial si requieres instalar desde cero Node.js
 
 ## Instalación
 
 Este proyecto usa la versión de node.js  22.14.0
 Si requieres crear un proyecto desde cero, previamente se debe ejecutar: npm init desde alguna terminal cmd o powershell, esto permitirá crear el archivo package.json
 
+Si ya has creado un archivo package.json solo debes ejecutar el siguiente comando o revisar la documentación sobre Jest para su ejecución.
+
 ```bash
 npm install --save-dev jest
-```
-
-## Ejecución de pruebas
-
-```bash
-npx jest
 ```
 
 ## Configuración
@@ -31,22 +33,27 @@ Configura tu archivo `package.json` para incluir un script de pruebas:
 ```
 [Documentación oficial de Jest](https://jestjs.io/docs/getting-started)
 
-## Ejemplo
+[Documentación oficial de Babel](https://jestjs.io/docs/getting-started)
 
+## Ejecución de pruebas
+
+También es posible ejecutar `` para correr tus pruebas y ver los resultados en la terminal.
+
+```bash
+npx jest
+
+or
+
+npm test
 ```
 
-```
-## Ejecución
 
-Ejecuta `npm test` para correr tus pruebas y ver los resultados en la terminal.
-
-versión LTS (Long-Term Support) de Node.js.
-nvm install 22.14.0
 
 ### Ejución de test
 Para ejecutar cada archivo de test - los archivos de test apuntan a la ruta de los archivos analizados
 
 npx jest tests/factoryMethod/case2.test.js
+npx jest tests/factoryMethod/case2-1.test.js
 
 Este funcionó sin errores:
 
@@ -63,25 +70,22 @@ Además, el código generado garantiza la compatibilidad con Jest mediante impor
 
 Por fines de testing se exportan todas las clases y clases que heredan sin necesidad de usar export default, para que cada uno pueda ser testeado sin que arrojen errores de 'undefined' cuando no se importen desde los archivos de tests cada uno de forma individual.
 
-Cases
 
-Las formas para crear prompts se pueden enfocar en:
-
-### Enfocado en estructura
-
-Crea un ejemplo de código JavaScript para frontend que implemente el patrón Factory Method para la creación de objetos. Define una interfaz común para los objetos creados y diferentes clases concretas que implementen esa interfaz. Utiliza una función fábrica para instanciar estos objetos basándose en un tipo. Cada objeto debe tener un método `render(containerId)` que encuentre el elemento con el ID `containerId` en el DOM y muestre información del objeto dentro de él. Utiliza la sintaxis de módulos ES, asegurándote de importar y exportar los módulos.
-
-### Propiedades de los objetos
-
-Genera un ejemplo de código JavaScript para frontend utilizando el patrón Factory Method para crear diferentes tipos de **productos** (por ejemplo, producto con imagen, producto con texto). Cada producto debe tener propiedades como `nombre` y un método `render(elementoPadre)` para mostrar el producto en el DOM. Implementa la fábrica y los productos utilizando la sintaxis de módulos ES, con las correspondientes importaciones y exportaciones.
-
+- Ejemplo 1 
 
 Crea un factory method ArticleFactory.createArticle(type, data), que devuelva NewsArticle, OpinionArticle o ReportArticle, todas heredando de ArticleCard. Implementa render(). Define todas las clases y la fábrica en un solo archivo y exporta solo ArticleFactory. Utiliza la sintaxis de módulos ES (import/export). - No sirvió porque es necesario exportar cada una de las clases y clases que heredan.
 
-El siguiente prompt si permitió testear
-Para que se puedan testear se requiere usar la siguiente forma de import
+- Ejemplo 2
+
+El siguiente prompt permitió testear, usando el formato de Modules ES para cada archivo de test, el cual puede ser modificado según la estructura de un proyecto:
 ````
 import { ArticleFactory, NewsArticle, OpinionArticle, ReportArticle} from '../../src/case-2/deepseek.r1/example1.1.js';
 
 ````
-Crea un factory method ArticleFactory.createArticle(type, data), que devuelva NewsArticle, OpinionArticle o ReportArticle, todas heredando de ArticleCard. Implementa render(). Todas Define todas las clases y la fábrica en un solo archivo y expórtalas. Utiliza la sintaxis de módulos ES (export).
+Crea un factory method ArticleFactory.createArticle(type, data), que devuelva NewsArticle, OpinionArticle o ReportArticle, todas heredando de ArticleCard. Implementa render(). Define todas las clases y la fábrica en un solo archivo y expórtalas. Utiliza la sintaxis de módulos ES (export).
+
+## Estructura de las pruebas unitarias
+
+```
+
+```
