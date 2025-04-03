@@ -1,11 +1,10 @@
-// import {ArticleFactory, NewsArticle, OpinionArticle, ReportArticle, ArticleCard
-// } from '../../src/case-2/deepseek.r1/example1.1.js';
+import {ArticleFactory, NewsArticle, OpinionArticle, ReportArticle, ArticleCard} from '../../src/case-2/claude-3.5/example1.2.js';
 
-import {ArticleFactory, NewsArticle, OpinionArticle, ReportArticle, ArticleCard 
-} from '../../src/case-2/deepseek.r1/example1.2.js';
+// import {ArticleFactory, NewsArticle, OpinionArticle, ReportArticle, ArticleCard} from '../../src/case-2/deepseek.r1/example1.1.js';
 
-// import {ArticleFactory, NewsArticle, OpinionArticle, ReportArticle, ArticleCard
-// } from '../../src/case-2/deepseek.r1/example1.3.js';
+//import {ArticleFactory, NewsArticle, OpinionArticle, ReportArticle, ArticleCard} from '../../src/case-2/deepseek.r1/example1.2.js';
+
+// import {ArticleFactory, NewsArticle, OpinionArticle, ReportArticle, ArticleCard} from '../../src/case-2/deepseek.r1/example1.3.js';
 
 describe('ArticleFactory', () => {
   test('should create a NewsArticle instance', () => {
