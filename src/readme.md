@@ -57,3 +57,12 @@ El prompt puede incluir detalles como:
 - **Eficiencia:** Acelera el proceso de desarrollo al proporcionar una guía clara y estructurada al asistente.
 
 Esta estructura asegura que el código y la documentación sean consistentes y de alta calidad, alineándose con las políticas y estándares definidos para el proyecto.
+
+[text](https://git-scm.com/docs/git-rm)
+
+````
+git rm -r --cached node_modules
+````
+
+Claude 3.7 Sonnet a partir del caso 1 nuevo, del útlimo cambio
+7 peticiones cada ciertas horas 21h00 hoy 04/04/2025

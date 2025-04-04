@@ -1,136 +1,91 @@
 // 2
-
-// 1. Define una clase base para los componentes de tarjeta
-class CardComponent {
-  constructor(data) {
-    if (new.target === CardComponent) {
-      throw new Error("CardComponent es una clase abstracta, no se puede instanciar directamente");
+// article.js
+// Definición de la clase base ArticleCard
+class ArticleCard {
+  constructor(title, author, content) {
+    if (this.constructor === ArticleCard) {
+      throw new Error("Abstract classes can't be instantiated.");
     }
-    this.data = data;
+    this.title = title;
+    this.author = author;
+    this.content = content;
   }
 
   render() {
-    throw new Error("El método render() debe ser implementado en las clases derivadas.");
+    throw new Error("Method 'render()' must be implemented.");
   }
 }
 
-// 2. Crea clases específicas para cada tipo de tarjeta, heredando de la clase base
-class ArticleCard extends CardComponent {
-  constructor(data) {
-    super(data);
+// Definición de la clase NewsArticle
+class NewsArticle extends ArticleCard {
+  constructor(title, author, content, source) {
+    super(title, author, content);
+    this.source = source;
   }
 
   render() {
     return `
-      <div class="card article-card">
-        <h3>${this.data.title}</h3>
-        <p>${this.data.summary}</p>
-        <a href="${this.data.link}">Leer más</a>
+      <div class="news-article">
+        <h2>${this.title}</h2>
+        <p class="author">By ${this.author} - Source: ${this.source}</p>
+        <p>${this.content}</p>
       </div>
     `;
   }
 }
 
-class ProductCard extends CardComponent {
-  constructor(data) {
-    super(data);
+// Definición de la clase OpinionArticle
+class OpinionArticle extends ArticleCard {
+  constructor(title, author, content, opinion) {
+    super(title, author, content);
+    this.opinion = opinion;
   }
 
   render() {
     return `
-      <div class="card product-card">
-        <img src="${this.data.imageUrl}" alt="${this.data.name}">
-        <h4>${this.data.name}</h4>
-        <p>Precio: $${this.data.price}</p>
-        <button>Agregar al carrito</button>
+      <div class="opinion-article">
+        <h2>${this.title}</h2>
+        <p class="author">By ${this.author}</p>
+        <p>${this.content}</p>
+        <p><strong>Opinion:</strong> ${this.opinion}</p>
       </div>
     `;
   }
 }
 
-class ProfileCard extends CardComponent {
-  constructor(data) {
-    super(data);
+// Definición de la clase ReportArticle
+class ReportArticle extends ArticleCard {
+  constructor(title, author, content, date) {
+    super(title, author, content);
+    this.date = date;
   }
 
   render() {
     return `
-      <div class="card profile-card">
-        <img src="${this.data.avatarUrl}" alt="${this.data.name}">
-        <h4>${this.data.name}</h4>
-        <p>${this.data.bio}</p>
-        <a href="${this.data.profileLink}">Ver perfil</a>
+      <div class="report-article">
+        <h2>${this.title}</h2>
+        <p class="author">By ${this.author} - Date: ${this.date}</p>
+        <p>${this.content}</p>
       </div>
     `;
   }
 }
 
-
-// 3. Implementa la Factory
-class CardFactory {
-  static createCard(type, data) {
+// Definición de la clase ArticleFactory
+class ArticleFactory {
+  static createArticle(type, data) {
     switch (type) {
-      case 'article':
-        return new ArticleCard(data);
-      case 'product':
-        return new ProductCard(data);
-      case 'profile':
-        return new ProfileCard(data);
+      case 'news':
+        return new NewsArticle(data.title, data.author, data.content, data.source);
+      case 'opinion':
+        return new OpinionArticle(data.title, data.author, data.content, data.opinion);
+      case 'report':
+        return new ReportArticle(data.title, data.author, data.content, data.date);
       default:
-        throw new Error(`Tipo de tarjeta no soportado: ${type}`);
+        throw new Error(`Invalid article type: ${type}`);
     }
   }
 }
 
-// 4. Ejemplo de uso
-document.addEventListener('DOMContentLoaded', () => {
-  const container = document.getElementById('card-container'); // Asegúrate de tener un elemento con este ID en tu HTML
-
-  // Datos de ejemplo
-  const articleData = {
-    title: 'Título del Artículo',
-    summary: 'Un breve resumen del artículo.',
-    link: '#'
-  };
-
-  const productData = {
-    name: 'Producto Ejemplo',
-    price: 29.99,
-    imageUrl: 'https://via.placeholder.com/150' // Reemplaza con una URL real
-  };
-
-  const profileData = {
-    name: 'John Doe',
-    bio: 'Desarrollador de software.',
-    avatarUrl: 'https://via.placeholder.com/50', // Reemplaza con una URL real
-    profileLink: '#'
-  };
-
-  // Crear tarjetas usando la Factory
-  const articleCard = CardFactory.createCard('article', articleData);
-  const productCard = CardFactory.createCard('product', productData);
-  const profileCard = CardFactory.createCard('profile', profileData);
-
-
-  // Renderizar y agregar las tarjetas al contenedor
-  container.innerHTML = articleCard.render() + productCard.render() + profileCard.render();
-});
-
-//  Opcional:  Función para limpiar el contenedor y renderizar solo ciertas tarjetas.
-function renderCards(type, dataArray, containerId) {
-    const container = document.getElementById(containerId);
-    container.innerHTML = ''; // Limpiar el contenedor
-
-    dataArray.forEach(data => {
-      try {
-        const card = CardFactory.createCard(type, data);
-        container.innerHTML += card.render();
-      } catch (error) {
-        console.error("Error creating card:", error);
-      }
-    });
-}
-
-//Ejemplo de uso de la función renderCards:
-//const articles = [{title: 'Art 1', summary:'Sum 1', link: '#'}, {title: 'Art 2', summary:'Sum 2', link: '#'}];
-//renderCards('article', articles, 'card-container');
+// Exportación de las clases y la fábrica
+export { ArticleCard, NewsArticle, OpinionArticle, ReportArticle, ArticleFactory };

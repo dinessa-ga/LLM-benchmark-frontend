@@ -1,41 +1,47 @@
-// 1
+//1
 
-class Card {
+// ...existing code...
+
+export class ArticleCard {
   constructor(data) {
-    this.data = data;
+    this.title = data.title;
+    this.content = data.content;
   }
+
   render() {
-    return '<div>Tarjeta base</div>';
+    return `Título: ${this.title}\nContenido: ${this.content}`;
   }
 }
 
-class ArticleCard extends Card {
+export class NewsArticle extends ArticleCard {
   render() {
-    return `<div>Artículo: ${this.data.title}</div>`;
+    return `Noticia: ${this.title}\n${this.content}`;
   }
 }
 
-class ProductCard extends Card {
+export class OpinionArticle extends ArticleCard {
   render() {
-    return `<div>Producto: ${this.data.name}</div>`;
+    return `Opinión: ${this.title}\n${this.content}`;
   }
 }
 
-class ProfileCard extends Card {
+export class ReportArticle extends ArticleCard {
   render() {
-    return `<div>Perfil: ${this.data.username}</div>`;
+    return `Reporte: ${this.title}\n${this.content}`;
   }
 }
 
-export function createCard(type, data) {
-  switch (type) {
-    case 'article':
-      return new ArticleCard(data);
-    case 'product':
-      return new ProductCard(data);
-    case 'profile':
-      return new ProfileCard(data);
-    default:
-      throw new Error('Tipo de contenido no soportado');
+export class ArticleFactory {
+  static createArticle(type, data) {
+    switch (type) {
+      case 'news':
+        return new NewsArticle(data);
+      case 'opinion':
+        return new OpinionArticle(data);
+      case 'report':
+        return new ReportArticle(data);
+      default:
+        throw new Error('Tipo de artículo no válido');
+    }
   }
 }

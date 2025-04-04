@@ -1,125 +1,114 @@
 //3
 
-// Clase base abstracta para tarjetas - Definición de Productos (Componentes de Tarjeta)
-class Card {
+// articleFactory.js
+
+export class ArticleCard {
+  constructor(data) {
+    if (new.target === ArticleCard) {
+      throw new Error("ArticleCard es una clase abstracta y no puede ser instanciada directamente");
+    }
+    this.data = data;
+  }
+
   render() {
-      throw new Error("Método render() no implementado");
+    throw new Error("El método render() debe ser implementado por las clases hijas");
   }
 }
 
-// Tarjeta para artículos
-class ArticleCard extends Card {
-  constructor(data) {
-      super();
-      this.data = data;
-  }
-
+export class NewsArticle extends ArticleCard {
   render() {
-      const card = document.createElement("div");
-      card.className = "card article";
-      card.innerHTML = `
+    return `
+      <article class="news-card">
+        <header class="news-header">
           <h2>${this.data.title}</h2>
-          <p>${this.data.content}</p>
-          <footer>Autor: ${this.data.author}</footer>
-      `;
-      return card;
-  }
-}
-
-// Tarjeta para productos
-class ProductCard extends Card {
-  constructor(data) {
-      super();
-      this.data = data;
-  }
-
-  render() {
-      const card = document.createElement("div");
-      card.className = "card product";
-      card.innerHTML = `
-          <img src="${this.data.image}" alt="${this.data.name}" />
-          <h3>${this.data.name}</h3>
-          <p>$${this.data.price}</p>
-          <button>Agregar al carrito</button>
-      `;
-      return card;
-  }
-}
-
-// Tarjeta para perfiles
-class ProfileCard extends Card {
-  constructor(data) {
-      super();
-      this.data = data;
-  }
-
-  render() {
-      const card = document.createElement("div");
-      card.className = "card profile";
-      card.innerHTML = `
-          <div class="avatar">
-              <img src="${this.data.avatar}" alt="${this.data.name}" />
+          <div class="meta">
+            <span>Por ${this.data.author}</span>
+            <time>${new Date(this.data.publishDate).toLocaleDateString()}</time>
           </div>
-          <h3>${this.data.name}</h3>
-          <p>${this.data.bio}</p>
-          <ul>
-              ${this.data.skills.map(skill => `<li>${skill}</li>`).join("")}
-          </ul>
-      `;
-      return card;
+        </header>
+        <p class="excerpt">${this.data.excerpt}</p>
+        ${this.data.featuredImage ? `<img src="${this.data.featuredImage}" alt="${this.data.title}">` : ''}
+      </article>
+    `;
   }
 }
 
-//Lo siguiente se creó en otra caja de código - Definición de Fábricas (Creators)
-
-// Clase base abstracta para fábricas
-class CardFactory {
-  createCard(data) {
-      throw new Error("Método createCard() no implementado");
+export class OpinionArticle extends ArticleCard {
+  render() {
+    return `
+      <div class="opinion-card">
+        <div class="author-info">
+          <img src="${this.data.authorImage}" alt="${this.data.author}" class="avatar">
+          <h3>${this.data.author}</h3>
+          <p>${this.data.authorBio}</p>
+        </div>
+        <div class="opinion-content">
+          <h4>${this.data.title}</h4>
+          <blockquote>${this.data.content}</blockquote>
+          <div class="rating">
+            Valoración: ${'★'.repeat(this.data.rating)}${'☆'.repeat(5 - this.data.rating)}
+          </div>
+        </div>
+      </div>
+    `;
   }
 }
 
-// Fábrica para tarjetas de artículos
-class ArticleCardFactory extends CardFactory {
-  createCard(data) {
-      return new ArticleCard(data);
+export class ReportArticle extends ArticleCard {
+  render() {
+    return `
+      <section class="report-article">
+        <header class="report-header">
+          <h1>${this.data.headline}</h1>
+          <div class="report-meta">
+            <span class="category ${this.data.category.toLowerCase()}">${this.data.category}</span>
+            <div class="stats">
+              <span>${this.data.pages} páginas</span>
+              <span>${this.data.readingTime} min de lectura</span>
+            </div>
+          </div>
+        </header>
+        <div class="report-body">
+          ${this.data.sections.map(section => `
+            <div class="report-section">
+              <h3>${section.title}</h3>
+              <p>${section.content}</p>
+              ${section.chart ? `<div class="chart">${section.chart}</div>` : ''}
+            </div>
+          `).join('')}
+        </div>
+      </section>
+    `;
   }
 }
 
-// Fábrica para tarjetas de productos
-class ProductCardFactory extends CardFactory {
-  createCard(data) {
-      return new ProductCard(data);
-  }
-}
-
-// Fábrica para tarjetas de perfiles
-class ProfileCardFactory extends CardFactory {
-  createCard(data) {
-      return new ProfileCard(data);
-  }
-}
-
-//Otra caja de código - Función Helper para Seleccionar la Fábrica
-
-function getCardFactory(type) {
-  const factories = {
-      article: ArticleCardFactory,
-      product: ProductCardFactory,
-      profile: ProfileCardFactory,
+export class ArticleFactory {
+  static TYPE = {
+    NEWS: 'news',
+    OPINION: 'opinion',
+    REPORT: 'report'
   };
 
-  const FactoryClass = factories[type];
-  if (!FactoryClass) throw new Error(`Tipo de tarjeta no soportado: ${type}`);
-  
-  return new FactoryClass();
+  static createArticle(type, data) {
+    const typeMap = {
+      [ArticleFactory.TYPE.NEWS]: NewsArticle,
+      [ArticleFactory.TYPE.OPINION]: OpinionArticle,
+      [ArticleFactory.TYPE.REPORT]: ReportArticle
+    };
+
+    const normalizedType = type.toLowerCase();
+    const ArticleClass = typeMap[normalizedType];
+
+    if (!ArticleClass) {
+      const validTypes = Object.values(ArticleFactory.TYPE).join(', ');
+      throw new Error(`Tipo de artículo inválido: "${type}". Tipos válidos: ${validTypes}`);
+    }
+
+    return new ArticleClass(data);
+  }
 }
 
-// Otra caja de código - Función de Alto Nivel para Crear Tarjetas
-
-function createCard(type, data) {
-  const factory = getCardFactory(type); // Obtiene la fábrica concreta
-  const card = factory.createCard(data); // Crea la tarjeta
-  return card.render(); // Retorna el elemento DOM
-}
-
+// Uso:
+// const articleData = { title: "Mi artículo", author: "Juan Pérez", ... };
+// const article = ArticleFactory.createArticle(ArticleFactory.TYPE.NEWS, articleData);
+// document.getElementById('content').innerHTML = article.render();

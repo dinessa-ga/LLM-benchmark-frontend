@@ -1,169 +1,86 @@
-//1
+//3
+// article.js
 
-// Interfaz base para los componentes de tarjeta (producto abstracto)
-class CardComponent {
-  constructor(data) {
-    this.data = data;
+class ArticleCard {
+  constructor(title, author, content) {
+    if (this.constructor === ArticleCard) {
+      throw new Error("Abstract classes can't be instantiated.");
+    }
+    this.title = title;
+    this.author = author;
+    this.content = content;
   }
 
   render() {
-    throw new Error("El método render() debe ser implementado en las clases hijas.");
+    throw new Error("Method 'render()' must be implemented.");
   }
 }
 
-// Componentes de tarjeta concretos (productos concretos)
-
-class ArticleCardComponent extends CardComponent {
-  constructor(data) {
-    super(data);
+class NewsArticle extends ArticleCard {
+  constructor(title, author, content, source) {
+    super(title, author, content);
+    this.source = source;
   }
 
   render() {
     return `
-      <div class="card article-card">
-        <h3>${this.data.title}</h3>
-        <p>${this.data.excerpt}</p>
-        <a href="${this.data.url}">Leer más</a>
+      <div class="article news">
+        <h2>${this.title}</h2>
+        <p class="author">By ${this.author} - Source: ${this.source}</p>
+        <p>${this.content}</p>
       </div>
     `;
   }
 }
 
-class ProductCardComponent extends CardComponent {
-  constructor(data) {
-    super(data);
+class OpinionArticle extends ArticleCard {
+  constructor(title, author, content, opinion) {
+    super(title, author, content);
+    this.opinion = opinion;
   }
 
   render() {
     return `
-      <div class="card product-card">
-        <img src="${this.data.imageUrl}" alt="${this.data.name}">
-        <h4>${this.data.name}</h4>
-        <p>Precio: $${this.data.price}</p>
-        <button>Añadir al carrito</button>
+      <div class="article opinion">
+        <h2>${this.title}</h2>
+        <p class="author">By ${this.author}</p>
+        <p>${this.content}</p>
+        <p class="opinion"><strong>Opinion:</strong> ${this.opinion}</p>
       </div>
     `;
   }
 }
 
-class ProfileCardComponent extends CardComponent {
-  constructor(data) {
-    super(data);
+class ReportArticle extends ArticleCard {
+  constructor(title, author, content, date) {
+    super(title, author, content);
+    this.date = date;
   }
 
   render() {
     return `
-      <div class="card profile-card">
-        <img src="${this.data.avatarUrl}" alt="${this.data.name}">
-        <h4>${this.data.name}</h4>
-        <p>${this.data.bio}</p>
-        <a href="${this.data.profileUrl}">Ver perfil</a>
+      <div class="article report">
+        <h2>${this.title}</h2>
+        <p class="author">By ${this.author} - Date: ${this.date}</p>
+        <p>${this.content}</p>
       </div>
     `;
   }
 }
 
-
-// Factory (creador abstracto)
-class CardComponentFactory {
-  createCard(contentType, data) {
-    throw new Error("El método createCard() debe ser implementado en las clases hijas.");
-  }
-}
-
-// Concrete Factory (creador concreto)
-class ConcreteCardComponentFactory extends CardComponentFactory {
-  createCard(contentType, data) {
-    switch (contentType) {
-      case "article":
-        return new ArticleCardComponent(data);
-      case "product":
-        return new ProductCardComponent(data);
-      case "profile":
-        return new ProfileCardComponent(data);
+class ArticleFactory {
+  static createArticle(type, data) {
+    switch (type) {
+      case 'news':
+        return new NewsArticle(data.title, data.author, data.content, data.source);
+      case 'opinion':
+        return new OpinionArticle(data.title, data.author, data.content, data.opinion);
+      case 'report':
+        return new ReportArticle(data.title, data.author, data.content, data.date);
       default:
-        throw new Error(`Tipo de contenido no soportado: ${contentType}`);
+        throw new Error(`Invalid article type: ${type}`);
     }
   }
 }
 
-// Uso del patrón Factory Method
-const factory = new ConcreteCardComponentFactory();
-
-// Datos de ejemplo
-const articleData = {
-  title: "El Futuro de JavaScript",
-  excerpt: "Una mirada profunda a las nuevas características de JavaScript y cómo cambiarán el desarrollo web.",
-  url: "https://ejemplo.com/articulo-javascript"
-};
-
-const productData = {
-  name: "Camiseta Algodón Premium",
-  price: 25.99,
-  imageUrl: "https://ejemplo.com/camiseta.jpg"
-};
-
-const profileData = {
-  name: "Jane Doe",
-  bio: "Desarrolladora frontend apasionada por la accesibilidad y la usabilidad.",
-  avatarUrl: "https://ejemplo.com/jane-doe.jpg",
-  profileUrl: "https://ejemplo.com/jane-doe-profile"
-};
-
-
-// Crear componentes de tarjeta
-const articleCard = factory.createCard("article", articleData);
-const productCard = factory.createCard("product", productData);
-const profileCard = factory.createCard("profile", profileData);
-
-
-// Renderizar los componentes en el DOM
-const container = document.getElementById("card-container");
-if (container) {
-  container.innerHTML = `
-    ${articleCard.render()}
-    ${productCard.render()}
-    ${profileCard.render()}
-  `;
-} else {
-  console.error("No se encontró el elemento con el ID 'card-container'");
-}
-
-
-// Estilos CSS básicos (opcional, para la presentación de las tarjetas)
-const style = document.createElement('style');
-style.innerHTML = `
-  .card {
-    border: 1px solid #ccc;
-    padding: 10px;
-    margin-bottom: 10px;
-    border-radius: 5px;
-  }
-
-  .article-card {
-    background-color: #f9f9f9;
-  }
-
-  .product-card {
-    background-color: #f0f8ff; /* AliceBlue */
-  }
-
-  .product-card img {
-    width: 100px;
-    height: 100px;
-    object-fit: cover;
-  }
-
-  .profile-card {
-    background-color: #fffaf0; /* FloralWhite */
-  }
-
-  .profile-card img {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    object-fit: cover;
-  }
-
-`;
-document.head.appendChild(style);
+export { ArticleCard, NewsArticle, OpinionArticle, ReportArticle, ArticleFactory };

@@ -1,118 +1,125 @@
 //1
+// Claude-3.7
 
-// Clase base para todos los tipos de tarjetas
-class Card {
+// article-factory.js
+
+// Clase base ArticleCard
+export class ArticleCard {
   constructor(data) {
-    this.data = data;
+    this.title = data.title || '';
+    this.author = data.author || '';
+    this.date = data.date || new Date().toISOString();
+    this.content = data.content || '';
   }
 
   render() {
-    throw new Error("El método render debe ser implementado por las clases hijas");
+    throw new Error('El método render() debe ser implementado por las clases hijas');
   }
 }
 
-// Implementación concreta para tarjetas de artículos
-class ArticleCard extends Card {
+// Clase concreta para artículos de noticias
+export class NewsArticle extends ArticleCard {
+  constructor(data) {
+    super(data);
+    this.category = data.category || 'General';
+    this.imageUrl = data.imageUrl || '';
+    this.summary = data.summary || '';
+  }
+
   render() {
-    const html = `
-      <div class="card article-card">
-        <div class="card-header">
-          <h2>${this.data.title}</h2>
-          <span class="date">${this.data.date}</span>
+    return `
+      <article class="news-article">
+        <h2>${this.title}</h2>
+        ${this.imageUrl ? `<img src="${this.imageUrl}" alt="${this.title}">` : ''}
+        <div class="metadata">
+          <span class="category">${this.category}</span>
+          <span class="author">Por: ${this.author}</span>
+          <span class="date">${new Date(this.date).toLocaleDateString()}</span>
         </div>
-        <div class="card-body">
-          <p>${this.data.summary}</p>
-        </div>
-        <div class="card-footer">
-          <span class="author">Por ${this.data.author}</span>
-          <a href="${this.data.url}" class="btn-read">Leer más</a>
-        </div>
-      </div>
+        <p class="summary">${this.summary}</p>
+        <div class="content">${this.content}</div>
+      </article>
     `;
-    return html;
   }
 }
 
-// Implementación concreta para tarjetas de productos
-class ProductCard extends Card {
+// Clase concreta para artículos de opinión
+export class OpinionArticle extends ArticleCard {
+  constructor(data) {
+    super(data);
+    this.topic = data.topic || '';
+    this.authorBio = data.authorBio || '';
+  }
+
   render() {
-    const html = `
-      <div class="card product-card">
-        <div class="card-image">
-          <img src="${this.data.imageUrl}" alt="${this.data.name}">
+    return `
+      <article class="opinion-article">
+        <h2>${this.title}</h2>
+        <div class="metadata">
+          <span class="topic">Tema: ${this.topic}</span>
+          <span class="author">Por: ${this.author}</span>
+          <span class="date">${new Date(this.date).toLocaleDateString()}</span>
         </div>
-        <div class="card-body">
-          <h3>${this.data.name}</h3>
-          <p class="description">${this.data.description}</p>
-          <div class="price">${this.data.price}</div>
-        </div>
-        <div class="card-footer">
-          <button class="btn-add-cart" data-id="${this.data.id}">Añadir al carrito</button>
-        </div>
-      </div>
+        <div class="author-bio">${this.authorBio}</div>
+        <div class="content">${this.content}</div>
+      </article>
     `;
-    return html;
   }
 }
 
-// Implementación concreta para tarjetas de perfiles
-class ProfileCard extends Card {
+// Clase concreta para reportajes
+export class ReportArticle extends ArticleCard {
+  constructor(data) {
+    super(data);
+    this.location = data.location || '';
+    this.sources = data.sources || [];
+    this.relatedArticles = data.relatedArticles || [];
+  }
+
   render() {
-    const html = `
-      <div class="card profile-card">
-        <div class="card-header">
-          <div class="avatar">
-            <img src="${this.data.avatar}" alt="${this.data.name}">
+    const sourcesList = this.sources.map(source => `<li>${source}</li>`).join('');
+    const relatedList = this.relatedArticles.map(article => 
+      `<li><a href="${article.url}">${article.title}</a></li>`
+    ).join('');
+
+    return `
+      <article class="report-article">
+        <h2>${this.title}</h2>
+        <div class="metadata">
+          <span class="location">${this.location}</span>
+          <span class="author">Por: ${this.author}</span>
+          <span class="date">${new Date(this.date).toLocaleDateString()}</span>
+        </div>
+        <div class="content">${this.content}</div>
+        ${sourcesList ? `
+          <div class="sources">
+            <h3>Fuentes:</h3>
+            <ul>${sourcesList}</ul>
           </div>
-          <h3>${this.data.name}</h3>
-          <p class="job-title">${this.data.jobTitle}</p>
-        </div>
-        <div class="card-body">
-          <p>${this.data.bio}</p>
-        </div>
-        <div class="card-footer">
-          <div class="social-links">
-            ${this.renderSocialLinks()}
+        ` : ''}
+        ${relatedList ? `
+          <div class="related">
+            <h3>Artículos relacionados:</h3>
+            <ul>${relatedList}</ul>
           </div>
-          <button class="btn-contact" data-email="${this.data.email}">Contactar</button>
-        </div>
-      </div>
+        ` : ''}
+      </article>
     `;
-    return html;
-  }
-
-  renderSocialLinks() {
-    return this.data.socialMedia
-      .map(social => `<a href="${social.url}" class="social-icon ${social.network}"></a>`)
-      .join('');
   }
 }
 
-// Fábrica que implementa el patrón Factory Method
-class CardFactory {
-  createCard(type, data) {
-    switch (type) {
-      case 'article':
-        return new ArticleCard(data);
-      case 'product':
-        return new ProductCard(data);
-      case 'profile':
-        return new ProfileCard(data);
+// Factory Method para crear artículos
+export class ArticleFactory {
+  static createArticle(type, data) {
+    switch (type.toLowerCase()) {
+      case 'news':
+        return new NewsArticle(data);
+      case 'opinion':
+        return new OpinionArticle(data);
+      case 'report':
+        return new ReportArticle(data);
       default:
-        throw new Error(`Tipo de tarjeta no soportado: ${type}`);
+        throw new Error(`Tipo de artículo desconocido: ${type}`);
     }
-  }
-}
-
-// Función de ayuda para renderizar tarjetas en el DOM
-function renderCardToDOM(cardType, data, containerId) {
-  const factory = new CardFactory();
-  const card = factory.createCard(cardType, data);
-  const container = document.getElementById(containerId);
-  
-  if (container) {
-    container.innerHTML += card.render();
-  } else {
-    console.error(`Contenedor con ID ${containerId} no encontrado`);
   }
 }

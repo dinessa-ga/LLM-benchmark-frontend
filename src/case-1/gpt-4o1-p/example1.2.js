@@ -1,56 +1,47 @@
 // 2
 
-class CardFactory {
-  static createCard(tipo, datos) {
-    if (tipo === "articulo") return new ArticuloCard(datos);
-    if (tipo === "producto") return new ProductoCard(datos);
-    if (tipo === "perfil") return new PerfilCard(datos);
-    throw new Error("Tipo de card no válido");
-  }
-}
+// ...existing code...
 
-class ArticuloCard {
-  constructor({ titulo, contenido }) {
-    this.titulo = titulo;
-    this.contenido = contenido;
+export class ArticleCard {
+  constructor(data) {
+    this.title = data.title;
+    this.content = data.content;
   }
+
   render() {
-    return `<div class="card articulo">
-      <h2>${this.titulo}</h2>
-      <p>${this.contenido}</p>
-    </div>`;
+    return `Título: ${this.title}\nContenido: ${this.content}`;
   }
 }
 
-class ProductoCard {
-  constructor({ nombre, precio }) {
-    this.nombre = nombre;
-    this.precio = precio;
-  }
+export class NewsArticle extends ArticleCard {
   render() {
-    return `<div class="card producto">
-      <h2>${this.nombre}</h2>
-      <p>Precio: ${this.precio}</p>
-    </div>`;
+    return `Noticia: ${this.title}\n${this.content}`;
   }
 }
 
-class PerfilCard {
-  constructor({ usuario, bio }) {
-    this.usuario = usuario;
-    this.bio = bio;
-  }
+export class OpinionArticle extends ArticleCard {
   render() {
-    return `<div class="card perfil">
-      <h3>${this.usuario}</h3>
-      <p>${this.bio}</p>
-    </div>`;
+    return `Opinión: ${this.title}\n${this.content}`;
   }
 }
 
-// Ejemplo de uso
-const miCard = CardFactory.createCard("articulo", {
-  titulo: "Mi Artículo",
-  contenido: "Contenido interesante",
-});
-console.log(miCard.render());
+export class ReportArticle extends ArticleCard {
+  render() {
+    return `Reporte: ${this.title}\n${this.content}`;
+  }
+}
+
+export class ArticleFactory {
+  static createArticle(type, data) {
+    switch (type) {
+      case 'news':
+        return new NewsArticle(data);
+      case 'opinion':
+        return new OpinionArticle(data);
+      case 'report':
+        return new ReportArticle(data);
+      default:
+        throw new Error('Tipo de artículo no válido');
+    }
+  }
+}

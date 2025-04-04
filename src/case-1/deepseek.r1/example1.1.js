@@ -1,109 +1,69 @@
 //1
 
-class CardFactory {
-  createCard(type, data) {
-    switch (type.toLowerCase()) {
-      case 'article':
-        return this._createArticleCard(data);
-      case 'product':
-        return this._createProductCard(data);
-      case 'profile':
-        return this._createProfileCard(data);
-      default:
-        throw new Error(`Tipo de tarjeta no soportado: ${type}`);
-    }
+// Clase base Abstracta
+export class ArticleCard {
+  constructor(data) {
+    this.data = data;
   }
 
-  _createBaseCard() {
-    const card = document.createElement('div');
-    card.className = 'card';
-    return card;
-  }
-
-  _createArticleCard(data) {
-    const card = this._createBaseCard();
-    card.innerHTML = `
-      <div class="card-content article">
-        <h3 class="title">${data.title}</h3>
-        <p class="meta">Por ${data.author} - ${new Date(data.date).toLocaleDateString()}</p>
-        <div class="excerpt">${data.excerpt}</div>
-        <a href="${data.url}" class="read-more">Leer más</a>
-      </div>
-    `;
-    return card;
-  }
-
-  _createProductCard(data) {
-    const card = this._createBaseCard();
-    card.innerHTML = `
-      <div class="card-content product">
-        <img src="${data.image}" alt="${data.name}" class="product-image">
-        <h4 class="product-name">${data.name}</h4>
-        <p class="product-price">${data.price.toFixed(2)} €</p>
-        <p class="product-description">${data.description}</p>
-        <button class="add-to-cart" data-id="${data.id}">Añadir al carrito</button>
-      </div>
-    `;
-    return card;
-  }
-
-  _createProfileCard(data) {
-    const card = this._createBaseCard();
-    card.innerHTML = `
-      <div class="card-content profile">
-        <div class="profile-header">
-          <img src="${data.avatar}" alt="${data.name}" class="avatar">
-          <div class="profile-info">
-            <h3 class="name">${data.name}</h3>
-            <p class="title">${data.title}</p>
-          </div>
-        </div>
-        <p class="bio">${data.bio}</p>
-        <div class="social-links">
-          ${data.socialLinks.map(link => `
-            <a href="${link.url}" class="social-link" target="_blank">
-              <i class="${link.icon}"></i>
-            </a>
-          `).join('')}
-        </div>
-      </div>
-    `;
-    return card;
+  render() {
+    throw new Error('Método render() debe ser implementado por la subclase');
   }
 }
 
-// Ejemplo de uso
-const factory = new CardFactory();
+// Artículo de Noticias
+export class NewsArticle extends ArticleCard {
+  render() {
+    return `
+      <article class="news">
+        <h2>${this.data.title}</h2>
+        <p>${this.data.content}</p>
+        <footer>Fuente: ${this.data.source}</footer>
+      </article>
+    `;
+  }
+}
 
-// Crear tarjeta de artículo
-const articleCard = factory.createCard('article', {
-  title: 'Introducción a los Patrones de Diseño',
-  author: 'Juan Pérez',
-  date: '2023-03-15',
-  excerpt: 'Aprende sobre los principales patrones de diseño...',
-  url: '/blog/introduccion-patrones'
-});
+// Artículo de Opinión
+export class OpinionArticle extends ArticleCard {
+  render() {
+    return `
+      <article class="opinion">
+        <h2>${this.data.title}</h2>
+        <blockquote>"${this.data.opinion}"</blockquote>
+        <author>${this.data.author}</author>
+      </article>
+    `;
+  }
+}
 
-// Crear tarjeta de producto
-const productCard = factory.createCard('product', {
-  id: 123,
-  name: 'Zapatillas Running',
-  price: 89.99,
-  description: 'Zapatillas deportivas para running de última generación',
-  image: '/images/shoes.jpg'
-});
+// Artículo Reportaje
+export class ReportArticle extends ArticleCard {
+  render() {
+    return `
+      <article class="report">
+        <h1>${this.data.headline}</h1>
+        <section>${this.data.investigation}</section>
+        <div class="stats">${this.data.stats}</div>
+      </article>
+    `;
+  }
+}
 
-// Crear tarjeta de perfil
-const profileCard = factory.createCard('profile', {
-  name: 'María García',
-  title: 'Desarrolladora Frontend',
-  avatar: '/avatars/maria.jpg',
-  bio: 'Apasionada por crear experiencias web increíbles...',
-  socialLinks: [
-    { url: 'https://github.com/maria', icon: 'fab fa-github' },
-    { url: 'https://linkedin.com/in/maria', icon: 'fab fa-linkedin' }
-  ]
-});
-
-// Agregar tarjetas al DOM
-document.getElementById('card-container').append(articleCard, productCard, profileCard);
+// Factory Method
+export class ArticleFactory {
+  static createArticle(type, data) {
+    const normalizedType = type.toLowerCase();
+    
+    switch(normalizedType) {
+      case 'news':
+        return new NewsArticle(data);
+      case 'opinion':
+        return new OpinionArticle(data);
+      case 'report':
+        return new ReportArticle(data);
+      default:
+        throw new Error(`Tipo de artículo no válido: ${type}`);
+    }
+  }
+}
