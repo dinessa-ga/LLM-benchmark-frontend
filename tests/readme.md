@@ -84,6 +84,9 @@ import { ArticleFactory, NewsArticle, OpinionArticle, ReportArticle} from '../..
 ````
 Crea un factory method ArticleFactory.createArticle(type, data), que devuelva NewsArticle, OpinionArticle o ReportArticle, todas heredando de ArticleCard. Implementa render(). Define todas las clases y la fábrica en un solo archivo y expórtalas. Utiliza la sintaxis de módulos ES (export).
 
+observer
+Crea una clase ChatChannel con subscribe(user) y sendMessage(message). Al enviar un mensaje, notifica a los observadores. User implementa Observer. Define las clases, métodos y observers en un solo archivo y expórtalas. Usa ES modules.
+
 ## Estructura de las pruebas unitarias
 
 ```
