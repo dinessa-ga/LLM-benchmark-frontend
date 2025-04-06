@@ -68,5 +68,7 @@ Claude 3.7 Sonnet a partir del caso 1 nuevo, del útlimo cambio
 7 peticiones cada ciertas horas 21h00 hoy 04/04/2025
 Hasta el caso 6 (2-5 con 2 repeticiones) (6 1 repetición)
 
-De aquí hasta la 3am - 8 peticiones al día permite Claude 3.7 sonnet (pero debo ver que sea gratuito)
+De aquí hasta la 3am - 8|9 peticiones al día permite Claude 3.7 sonnet (pero debo ver que sea gratuito)
 Puede que sea cada 6 horas que se activa.
+
+Observer generado hasta el caso 6, solo el caso 1 se generó las 3 repeticiones
