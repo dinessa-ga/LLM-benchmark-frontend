@@ -52,10 +52,9 @@ npm test
 ### Ejución de test
 Para ejecutar cada archivo de test - los archivos de test apuntan a la ruta de los archivos analizados
 
-npx jest tests/factoryMethod/case2.test.js
-npx jest tests/factoryMethod/case2-1.test.js
+npx jest tests/factoryMethod/case1.test.js
 
-npx jest tests/factoryMethod/case1-1.test.js
+npx jest tests/factoryMethod/case-1.test.js
 
 Este funcionó sin errores:
 
