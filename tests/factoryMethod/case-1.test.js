@@ -15,105 +15,73 @@
 import {ArticleFactory, NewsArticle, OpinionArticle, ReportArticle, ArticleCard} from '../../src/factoryMethod/case-1/gpt-4o1-p/example1.3.js'; 
 
 
-
 describe('ArticleFactory', () => {
-  test('should create a NewsArticle instance', () => {
-    const article = ArticleFactory.createArticle('news', {});
-    expect(article).toBeInstanceOf(NewsArticle);
+  // Test 1: Desacoplamiento entre creación y uso.
+  test('1. The client uses the common render() interface without relying on the concrete class', () => {
+    const dataNews = {
+      title: "News Title",
+      content: "Esta es una noticia de ejemplo"
+    };
+    const newsArticle = ArticleFactory.createArticle("news", dataNews);
+
+    // Verificamos que el método render() exista
+    expect(typeof newsArticle.render).toBe("function");
+
+    // El cliente utiliza render() para obtener la salida
+    const renderedOutput = newsArticle.render();
+
+    // Verificamos que la salida contenga los datos proporcionados
+    expect(renderedOutput).toContain("News Title");
+    expect(renderedOutput).toContain("Esta es una noticia de ejemplo");
   });
 
-  test('should return different concrete classes based on the type', () => {
+  // Test 2: Tipo correcto de producto devuelto.
+  test('2. Should return the correct type of article based on input', () => {
     const newsArticle = ArticleFactory.createArticle('news', {});
     const opinionArticle = ArticleFactory.createArticle('opinion', {});
     const reportArticle = ArticleFactory.createArticle('report', {});
 
+    // Verificamos que se devuelven instancias del tipo correcto
     expect(newsArticle).toBeInstanceOf(NewsArticle);
     expect(opinionArticle).toBeInstanceOf(OpinionArticle);
     expect(reportArticle).toBeInstanceOf(ReportArticle);
+
+    // Verificamos que no se mezclen tipos incorrectos
     expect(newsArticle).not.toBeInstanceOf(OpinionArticle);
     expect(newsArticle).not.toBeInstanceOf(ReportArticle);
     expect(opinionArticle).not.toBeInstanceOf(NewsArticle);
     expect(opinionArticle).not.toBeInstanceOf(ReportArticle);
     expect(reportArticle).not.toBeInstanceOf(NewsArticle);
     expect(reportArticle).not.toBeInstanceOf(OpinionArticle);
-  });
 
- // Caso 1: Desacoplamiento entre creación y uso.
-  // Aquí el cliente utiliza el método común "render()" para obtener la salida HTML sin conocer la implementación interna.
-  test('1. The client uses the common render() interface without relying on the concrete class', () => {
-    const dataNews = {
-      title: "News Title",
-      author: "News Author",
-      publishDate: new Date("2025-03-30"),
-      excerpt: "Esta es una noticia de ejemplo",
-      featuredImage: "http://example.com/image.jpg"
-    };
-
-    const newsArticle = ArticleFactory.createArticle("news", dataNews);
-
-    // Verificamos que el método render() exista
-    expect(typeof newsArticle.render).toBe("function");
-
-    // El cliente utiliza render() para obtener la salida (sin conocer la implementación interna)
-    const renderedOutput = newsArticle.render();
-
-    // Verificamos que la salida contenga algunos de los datos proporcionados (indicativo de desacoplamiento)
-    expect(renderedOutput).toContain("News Title");
-    expect(renderedOutput).toContain("news-card");
-  });
-
-
-  /* Caso 2: Tipo correcto de producto devuelto
-     Aunque el test anterior “should return different concrete classes based on the type”
-     ya verifica la creación de instancias correctas, se añade un caso para tipos no reconocidos.
-     Esto ayuda a reforzar que la fábrica devuelve el producto correcto o arroja un error 
-     en caso de que se solicite un tipo no soportado. */
-  test('2. Should throw an error or return null for an unrecognized article type', () => {
+    // Verificamos manejo de tipos no reconocidos
     expect(() => {
       ArticleFactory.createArticle('undefined-type', {});
     }).toThrow();
   });
 
-  // Caso 3: Cumplimiento del DIP (Principio de Inversión de Dependencias).
-  // Se valida que todos los artículos creados extiendan de la clase abstracta ArticleCard
-  // y que expongan la misma interfaz (en este caso, al menos el método render()).
+  // Test 3: Cumplimiento del DIP (Principio de Inversión de Dependencias).
   test('3. The articles created comply with the DIP by extending the abstract class ArticleCard.', () => {
     const articleTypes = [
       { 
         type: "news", 
         data: {
           title: "News Title",
-          author: "News Author",
-          publishDate: new Date("2025-03-30"),
-          excerpt: "Esta es una noticia de ejemplo",
-          featuredImage: "http://example.com/image.jpg"
+          content: "Contenido de noticia"
         }
       },
       {
         type: "opinion", 
         data: {
           title: "Opinion Piece",
-          author: "Opinion Author",
-          authorImage: "http://example.com/avatar.jpg",
-          authorBio: "Breve biografía",
-          content: "Contenido de opinión",
-          rating: 4
+          content: "Contenido de opinión"
         }
       },
       {
         type: "report", 
         data: {
-          headline: "Report Headline",
-          category: "Business",
-          pages: 10,
-          readingTime: 5,
-          sections: [
-            {
-              title: "Sección 1",
-              content: "Contenido de la sección",
-              chart: "Datos del gráfico"
-            }
-          ]
+          title: "Report Headline",
+          content: "Contenido de reporte"
         }
       }
     ];
@@ -128,7 +96,4 @@ describe('ArticleFactory', () => {
       expect(typeof article.render).toBe("function");
     });
   });
-
-
-  
 });
