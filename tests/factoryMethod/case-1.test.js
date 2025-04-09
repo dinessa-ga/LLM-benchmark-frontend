@@ -2,17 +2,17 @@
 //import {ArticleFactory, NewsArticle, OpinionArticle, ReportArticle, ArticleCard} from '../../src/factoryMethod/case-1/claude/example1.2.js';
 //import {ArticleFactory, NewsArticle, OpinionArticle, ReportArticle, ArticleCard} from '../../src/factoryMethod/case-1/claude/example1.3.js';
 
-// import {ArticleFactory, NewsArticle, OpinionArticle, ReportArticle, ArticleCard} from '../../src/case-2/deepseek.r1/example1.1.js';
-//import {ArticleFactory, NewsArticle, OpinionArticle, ReportArticle, ArticleCard} from '../../src/case-2/deepseek.r1/example1.2.js';
+//import {ArticleFactory, NewsArticle, OpinionArticle, ReportArticle, ArticleCard} from '../../src/factoryMethod/case-1/deepseek.r1/example1.1.js';
+import {ArticleFactory, NewsArticle, OpinionArticle, ReportArticle, ArticleCard} from '../../src/factoryMethod/case-1/deepseek.r1/example1.2.js';
 //import {ArticleFactory, NewsArticle, OpinionArticle, ReportArticle, ArticleCard} from '../../src/factoryMethod/case-1/deepseek.r1/example1.3.js';
 
-// import {ArticleFactory, NewsArticle, OpinionArticle, ReportArticle, ArticleCard} from '../../src/factoryMethod/case-1/gemini-2.0/example1.1.js';
+//import {ArticleFactory, NewsArticle, OpinionArticle, ReportArticle, ArticleCard} from '../../src/factoryMethod/case-1/gemini-2.0/example1.1.js';
 // import {ArticleFactory, NewsArticle, OpinionArticle, ReportArticle, ArticleCard} from '../../src/factoryMethod/case-1/gemini-2.0/example1.2.js';
 // import {ArticleFactory, NewsArticle, OpinionArticle, ReportArticle, ArticleCard} from '../../src/factoryMethod/case-1/gemini-2.0/example1.3.js'; 
 
-// import {ArticleFactory, NewsArticle, OpinionArticle, ReportArticle, ArticleCard} from '../../src/factoryMethod/case-1/gpt-4o1-p/example1.1.js';
-// import {ArticleFactory, NewsArticle, OpinionArticle, ReportArticle, ArticleCard} from '../../src/factoryMethod/case-1/gpt-4o1-p/example1.2.js';
-import {ArticleFactory, NewsArticle, OpinionArticle, ReportArticle, ArticleCard} from '../../src/factoryMethod/case-1/gpt-4o1-p/example1.3.js'; 
+//import {ArticleFactory, NewsArticle, OpinionArticle, ReportArticle, ArticleCard} from '../../src/factoryMethod/case-1/gpt-4o1-p/example1.1.js';
+//import {ArticleFactory, NewsArticle, OpinionArticle, ReportArticle, ArticleCard} from '../../src/factoryMethod/case-1/gpt-4o1-p/example1.2.js';
+//import {ArticleFactory, NewsArticle, OpinionArticle, ReportArticle, ArticleCard} from '../../src/factoryMethod/case-1/gpt-4o1-p/example1.3.js'; 
 
 
 describe('ArticleFactory', () => {
