@@ -7,7 +7,7 @@ import {ProductFactory, StandardProduct, DiscountProduct, ExclusiveProduct, Prod
 // import {ProductFactory, StandardProduct, DiscountProduct, ExclusiveProduct, ProductCard} from '../../src/factoryMethod/case-2/deepseek.r1/example1.3.js';
 
 // import {ProductFactory, StandardProduct, DiscountProduct, ExclusiveProduct, ProductCard} from '../../src/factoryMethod/case-2/gemini-2.0/example1.1.js';
-// import {ArticleFactory, NewsArticle, OpinionArticle, ReportArticle, ArticleCard} from '../../src/factoryMethod/case-2/gemini-2.0/example1.2.js';
+// import {ProductFactory, StandardProduct, DiscountProduct, ExclusiveProduct, ProductCard} from '../../src/factoryMethod/case-2/gemini-2.0/example1.2.js';
 // import {ProductFactory, StandardProduct, DiscountProduct, ExclusiveProduct, ProductCard} from '../../src/factoryMethod/case-2/gemini-2.0/example1.3.js'; 
 
 // import {ProductFactory, StandardProduct, DiscountProduct, ExclusiveProduct, ProductCard} from '../../src/factoryMethod/case-2/gpt-4o1-p/example1.1.js';
