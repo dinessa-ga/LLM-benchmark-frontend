@@ -1,3 +1,4 @@
+Quedó pendiente deep
 # Explicación del Prompt para la Generación de Código
 
 Este documento describe el tipo de prompt utilizado para la generación de código en este proyecto.
