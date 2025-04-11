@@ -67,8 +67,6 @@ npx jest tests/strategy/case-2.test.js
 npx jest tests/case1.test.js
 
 
-Este funcionó sin errores:
-
 ```
  ./node_modules/.bin/jest tests/factoryMethod/case2.test.js
 ```
