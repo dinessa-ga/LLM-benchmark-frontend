@@ -1,28 +1,41 @@
 //1
-// main.js
-import { NewsCategory, User } from './newsCategory.js';
+// newsCategory.js
+class NewsCategory {
+  constructor(name) {
+    this.name = name;
+    this.observers = [];
+  }
 
-// Crear categorías de noticias
-const sportsCategory = new NewsCategory('Sports');
-const politicsCategory = new NewsCategory('Politics');
+  subscribe(user) {
+    this.observers.push(user);
+    console.log(`${user.name} se ha suscrito a ${this.name}`);
+  }
 
-// Crear usuarios
-const user1 = new User('Alice');
-const user2 = new User('Bob');
-const user3 = new User('Charlie');
+  unsubscribe(user) {
+    this.observers = this.observers.filter(observer => observer !== user);
+    console.log(`${user.name} se ha desuscrito de ${this.name}`);
+  }
 
-// Suscribir usuarios a categorías
-sportsCategory.subscribe(user1);
-sportsCategory.subscribe(user2);
-politicsCategory.subscribe(user3);
-politicsCategory.subscribe(user1);
+  publish(article) {
+    console.log(`Nuevo artículo publicado en ${this.name}: ${article}`);
+    this.notifyObservers(article);
+  }
 
-// Publicar artículos
-sportsCategory.publish('Equipo local gana el campeonato');
-politicsCategory.publish('Nueva ley aprobada');
+  notifyObservers(article) {
+    this.observers.forEach(observer => {
+      observer.update(this.name, article);
+    });
+  }
+}
 
-// Desuscribir un usuario
-sportsCategory.unsubscribe(user2);
+class User {
+  constructor(name) {
+    this.name = name;
+  }
 
-// Publicar otro artículo
-sportsCategory.publish('Escandalo en el equipo');
+  update(category, article) {
+    console.log(`${this.name} recibió una notificación de ${category}: ${article}`);
+  }
+}
+
+export { NewsCategory, User };

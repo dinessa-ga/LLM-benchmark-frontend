@@ -54,10 +54,17 @@ Para ejecutar cada archivo de test - los archivos de test apuntan a la ruta de l
 
 Carpeta
 npx jest tests/factoryMethod/case-1.test.js
-
 npx jest tests/factoryMethod/case-2.test.js
+npx jest tests/factoryMethod/case-3.test.js
 
-npx jest tests/factoryMethod/case1.test.js
+npx jest tests/observer/case-1.test.js
+npx jest tests/observer/case-2.test.js
+
+npx jest tests/strategy/case-1.test.js
+npx jest tests/strategy/case-2.test.js
+
+
+npx jest tests/case1.test.js
 
 
 Este funcionó sin errores:
