@@ -87,14 +87,11 @@ Crea un factory method ArticleFactory.createArticle(type, data), que devuelva Ne
 
 - Ejemplo 2
 
-El siguiente prompt permitió testear, usando el formato de Modules ES para cada archivo de test, el cual puede ser modificado según la estructura de un proyecto:
-````
-import { ArticleFactory, NewsArticle, OpinionArticle, ReportArticle} from '../../src/case-2/deepseek.r1/example1.1.js';
+El siguiente prompt permitió testear, usando el formato de ES Modules para cada archivo de test, el cual puede ser modificado según la estructura de un proyecto:
 
-````
 Crea un factory method ArticleFactory.createArticle(type, data), que devuelva NewsArticle, OpinionArticle o ReportArticle, todas heredando de ArticleCard. Implementa render(). Define todas las clases y la fábrica en un solo archivo y expórtalas. Utiliza la sintaxis de módulos ES (export).
 
-observer
+Observer
 Crea una clase ChatChannel con subscribe(user) y sendMessage(message). Al enviar un mensaje, notifica a los observadores. User implementa Observer. Define las clases, métodos y observers en un solo archivo y expórtalas. Usa ES modules.
 
 ## Estructura de las pruebas unitarias
